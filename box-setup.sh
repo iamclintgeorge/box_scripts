@@ -44,7 +44,7 @@ echo "Successfully created ZPool"
 
 # Hydrate zfs with seed
 sudo sh -c 'zcat /home/frappe/Desktop/my-bench-seed.zfs.gz | zfs receive mypool/my-bench'
-zfs set mountpoint=/home/frappe/Desktop/frappe/my-bench mypool/my-bench
+zfs set mountpoint=/home/frappe/Templates/frappe/my-bench mypool/my-bench
 echo "Frappe Bench moved to ZPool"
 
 # Run the frappe bench
@@ -89,6 +89,6 @@ ln -sf /home/frappe/.nvm/versions/node/v24.15.0/bin/yarn /usr/bin/yarn
 # ls -l /usr/bin/node /usr/bin/npm
 
 # Fix permissions on the new mount (for frappe usergroup)
-chown -R frappe:frappe /home/frappe/Desktop/frappe/my-bench
+chown -R frappe:frappe /home/frappe/Templates/frappe/my-bench
 
-sudo -u frappe -i bash -c "cd /home/frappe/Desktop/frappe/my-bench && bench start"
+sudo -u frappe -i bash -c "cd /home/frappe/Templates/frappe/my-bench && bench start"
