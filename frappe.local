@@ -1,0 +1,33 @@
+server {
+    listen 80;
+    server_name frappe.local;
+
+    proxy_intercept_errors on;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    # The below localtion object can be deleted if /disk-confirm in setup.sh in not being used
+     location /disk-confirm {
+        # Strip the /disk-confirm prefix so Python sees plain /
+        rewrite ^/disk-confirm(/.*)? /$1 break;
+
+        proxy_pass         http://localhost:8765;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_read_timeout 310s;   # slightly more than the 300s script timeout
+    }
+
+    error_page 500 502 503 504 /site-error.html;
+
+    location = /site-error.html {
+    root /var/www/html; # Ensure this points to where the file physically sits
+    internal;
+    }
+}
