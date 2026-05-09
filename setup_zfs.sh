@@ -117,7 +117,26 @@ done
 echo "[zfs-setup] All disks wiped."
 
 
-# Creating ZFS Pool
+# ===== Create ZFS Pool =====
 echo "[zfs-setup] Creating ZFS pool 'mypool'..."
 zpool create -o ashift=12 mypool $DISK_PATHS
 echo "[zfs-setup] ZFS pool 'mypool' created successfully."
+
+sudo zfs create -o recordsize=16k mypool/sql
+sudo zfs create mypool/my-bench
+
+sudo chown -R frappe:frappe /mypool
+sudo chown -R frappe:frappe /mypool/my-bench
+sudo chown -R frappe:frappe /mypool/my-bench /mypool/sql
+
+sudo chmod -R 775 /mypool/my-bench /mypool/sql
+
+
+# Move container images to zpool datasets
+sudo rsync -av ~/.local/share/containers/storage/volumes/frappe_docker_db-data/_data /mypool/sql/
+podman cp frappe_docker-backend-1:/home/frappe/frappe-bench/sites/. /mypool/my-bench/
+
+podman unshare chown -R 1000:1000 /mypool/my-bench /mypool/sql
+
+# Execute frappe setup
+exec ./frappe_setup.sh
