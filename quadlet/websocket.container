@@ -1,0 +1,14 @@
+[Unit]
+Requires=configurator.service
+After=configurator.service
+
+[Container]
+Network=systemd-frappe:alias=websocket
+Exec=node /home/frappe/frappe-bench/apps/frappe/socketio.js
+Image=custom:16
+PodmanArgs=--platform linux/amd64
+Pull=missing
+Volume=sites:/home/frappe/frappe-bench/sites
+
+[Service]
+Restart=always

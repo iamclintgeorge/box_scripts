@@ -1,0 +1,19 @@
+[Unit]
+Requires=db.service redis-cache.service redis-queue.service
+After=db.service redis-cache.service redis-queue.service
+
+[Container]
+Network=systemd-frappe
+Environment=DB_HOST=systemd-db DB_PORT=3306 REDIS_CACHE=systemd-redis-cache:6379 REDIS_QUEUE=systemd-redis-queue:6379 SOCKETIO_PORT=9000
+Entrypoint=bash
+Exec=/scripts/configurator-init.sh
+Image=custom:16
+PodmanArgs=--platform linux/amd64
+Pull=missing
+Volume=sites:/home/frappe/frappe-bench/sites
+Volume=/usr/local/bin/configurator-init.sh:/scripts/configurator-init.sh:Z
+
+[Service]
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=yes

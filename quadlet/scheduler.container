@@ -1,0 +1,14 @@
+[Unit]
+Requires=configurator.service
+After=configurator.service
+
+[Container]
+Network=systemd-frappe
+Exec=bench schedule
+Image=custom:16
+PodmanArgs=--platform linux/amd64
+Pull=missing
+Volume=/mypool/my-bench:/home/frappe/frappe-bench/sites:Z
+
+[Service]
+Restart=always

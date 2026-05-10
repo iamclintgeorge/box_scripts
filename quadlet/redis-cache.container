@@ -1,0 +1,6 @@
+[Container]
+Network=systemd-frappe:alias=redis-cache
+Image=docker.io/library/redis:8.6-alpine
+
+[Service]
+Restart=always

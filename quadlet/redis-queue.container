@@ -1,0 +1,7 @@
+[Container]
+Network=systemd-frappe:alias=redis-queue
+Image=docker.io/library/redis:8.6-alpine
+Volume=redis-queue-data:/data
+
+[Service]
+Restart=always
