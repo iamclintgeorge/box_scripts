@@ -145,6 +145,9 @@ podman cp frappe_docker-backend-1:/home/frappe/frappe-bench/sites/. /mypool/my-b
 podman unshare chown -R 999:999 /mypool/sql
 podman unshare chown -R 1000:1000 /mypool/my-bench
 
+# FIXME: This is a temporary fix. This code in unsafe for Production
+podman exec systemd-db mariadb -u root --password=123 -e "UPDATE mysql.user SET Host='%' WHERE User != 'root' AND Host != 'localhost'; FLUSH PRIVILEGES;"
+
 echo "[zfs-setup] Container data moved to /mypool datasets successfully."
 
 # Initial ZFS Snapshot
