@@ -1,0 +1,16 @@
+[Unit]
+Requires=backend.service websocket.service
+After=backend.service websocket.service
+
+[Container]
+Network=systemd-frappe
+Environment=BACKEND=backend:8000 CLIENT_MAX_BODY_SIZE=50m FRAPPE_SITE_NAME_HEADER=$$host PROXY_READ_TIMEOUT=120 SOCKETIO=websocket:9000 UPSTREAM_REAL_IP_ADDRESS=127.0.0.1 UPSTREAM_REAL_IP_HEADER=X-Forwarded-For UPSTREAM_REAL_IP_RECURSIVE=off
+Exec=nginx-entrypoint.sh
+Image=custom:16
+PodmanArgs=--platform linux/amd64
+PublishPort=8080:8080
+Pull=missing
+Volume=/mypool/my-bench:/home/frappe/frappe-bench/sites:Z
+
+[Service]
+Restart=always

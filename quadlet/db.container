@@ -1,0 +1,15 @@
+[Container]
+Network=systemd-frappe:alias=db
+Notify=healthy
+Environment=MARIADB_AUTO_UPGRADE=1 MYSQL_ROOT_PASSWORD=123
+Exec='--character-set-server=utf8mb4' '--collation-server=utf8mb4_unicode_ci' --skip-character-set-client-handshake
+HealthCmd=mariadb-admin ping -h localhost -u root --password=123
+HealthInterval=2s
+HealthRetries=3
+HealthStartPeriod=30s
+HealthTimeout=2s
+Image=docker.io/library/mariadb:11.8
+Volume=/mypool/sql:/var/lib/mysql:Z
+
+[Service]
+Restart=always
