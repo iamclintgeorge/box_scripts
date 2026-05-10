@@ -126,6 +126,11 @@ echo "[zfs-setup] Creating ZFS pool datasets..."
 sudo zfs create -o recordsize=16k mypool/sql
 sudo zfs create mypool/my-bench
 
+# MariaDB - ZFS specific configuration optimization
+# sudo zfs set primarycache=metadata mypool/sql
+# sudo zfs set logbias=throughput mypool/sql
+# sudo zfs set redundant_metadata=most mypool/sql
+
 sudo chown -R frappe:frappe /mypool
 sudo chown -R frappe:frappe /mypool/my-bench /mypool/sql
 sudo chmod -R 775 /mypool/my-bench /mypool/sql
@@ -134,11 +139,17 @@ echo "[zfs-setup] ZFS pool datasets created successfully."
 
 # Move container images to zpool datasets
 echo "[zfs-setup] Moving container data to /mypool ..."
-sudo rsync -av ~/.local/share/containers/storage/volumes/frappe_docker_db-data/_data /mypool/sql/
+sudo rsync -av ~/.local/share/containers/storage/volumes/frappe_docker_db-data/_data/ /mypool/sql/
 podman cp frappe_docker-backend-1:/home/frappe/frappe-bench/sites/. /mypool/my-bench/
 
-podman unshare chown -R 1000:1000 /mypool/my-bench /mypool/sql
+podman unshare chown -R 999:999 /mypool/sql
+podman unshare chown -R 1000:1000 /mypool/my-bench
+
 echo "[zfs-setup] Container data moved to /mypool datasets successfully."
+
+# Initial ZFS Snapshot
+# sudo zfs snapshot mypool/sql@initial
+# sudo zfs snapshot mypool/my-bench@initial
 
 # Start frappe setup
 echo "[zfs-setup] Start Frappe Service"
