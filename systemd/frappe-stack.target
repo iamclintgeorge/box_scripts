@@ -1,0 +1,8 @@
+[Unit]
+Description=Frappe Application Stack
+Requires=zpool-check.service
+After=zpool-check.service network-online.target
+ConditionPathIsMountPoint=/mypool
+
+[Install]
+WantedBy=multi-user.target

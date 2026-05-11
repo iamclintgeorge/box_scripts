@@ -1,0 +1,13 @@
+[Unit]
+Description=Check for ZFS Pool
+DefaultDependencies=no
+After=zfs-import.target zfs-mount.service
+Before=frappe-stack.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/zpool-check.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

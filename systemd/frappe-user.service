@@ -1,0 +1,35 @@
+[Unit]
+Description=Start Frappe quadlet services
+Requires=frappe-stack.target
+After=frappe-stack.target
+ConditionPathIsMountPoint=/mypool
+
+[Service]
+Type=oneshot
+User=frappe
+RemainAfterExit=yes
+ExecStart=systemctl --user start \
+    db.service \
+    redis-cache.service \
+    redis-queue.service \
+    configurator.service \
+    backend.service \
+    websocket.service \
+    frontend.service \
+    queue-long.service \
+    queue-short.service \
+    scheduler.service
+ExecStop=systemctl --user stop \
+    db.service \
+    redis-cache.service \
+    redis-queue.service \
+    configurator.service \
+    backend.service \
+    websocket.service \
+    frontend.service \
+    queue-long.service \
+    queue-short.service \
+    scheduler.service
+
+[Install]
+WantedBy=frappe-stack.target
