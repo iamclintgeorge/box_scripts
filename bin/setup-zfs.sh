@@ -139,21 +139,19 @@ echo "[zfs-setup] ZFS pool datasets created successfully."
 
 # Move container images to zpool datasets
 echo "[zfs-setup] Moving container data to /mypool ..."
-sudo rsync -av ~/.local/share/containers/storage/volumes/frappe_docker_db-data/_data/ /mypool/sql/
-podman cp frappe_docker-backend-1:/home/frappe/frappe-bench/sites/. /mypool/my-bench/
+sudo rsync -av /home/frappe/.local/share/containers/storage/volumes/frappe_docker_db-data/_data/ /mypool/sql/
+sudo rsync -av /home/frappe/.local/share/containers/storage/volumes/frappe_docker_sites/_data/ /mypool/my-bench/
 
-podman unshare chown -R 999:999 /mypool/sql
-podman unshare chown -R 1000:1000 /mypool/my-bench
-
-# FIXME: This is a temporary fix. This code in unsafe for Production
-podman exec systemd-db mariadb -u root --password=123 -e "UPDATE mysql.user SET Host='%' WHERE User != 'root' AND Host != 'localhost'; FLUSH PRIVILEGES;"
-
+sudo -u frappe podman unshare chown -R 1000:1000 /mypool/my-bench /mypool/sql
 echo "[zfs-setup] Container data moved to /mypool datasets successfully."
 
 # Initial ZFS Snapshot
 # sudo zfs snapshot mypool/sql@initial
 # sudo zfs snapshot mypool/my-bench@initial
 
-# Start frappe setup
-echo "[zfs-setup] Start Frappe Service"
-systemctl --user start db.service redis-cache.service redis-queue.service configurator.service backend.service websocket.service frontend.service queue-long.service queue-short.service scheduler.service
+# Execute frappe setup
+echo "[zfs-setup] Executing Frappe Setup"
+# exec ./frappe_setup.sh
+export XDG_RUNTIME_DIR=/run/user/$(id -u frappe)
+
+sudo -u frappe -E systemctl --user start db.service redis-cache.service redis-queue.service configurator.service backend.service websocket.service frontend.service queue-long.service queue-short.service scheduler.service
