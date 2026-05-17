@@ -2,7 +2,7 @@
   <a href="https://frappe.io">
     <img src=".github/logo.svg" height="80" width="80" alt="Frappe Box Logo">
   </a>
-  <h2>Frappe Box</h2>
+  <h2>Frappe Box Scripts</h2>
 
 **Scripts for Frappe Box**
 
@@ -16,16 +16,16 @@
 
 ```text
 ├── /usr/local/bin/
-│   ├── configurator-init.sh
-│   ├── disk_confirm_server.py
-│   ├── setup_zfs.sh
-│   └── zpool-check.sh
+│              ├── configurator-init.sh
+│              ├── disk_confirm_server.py
+│              ├── setup_zfs.sh
+│              └── zpool-check.sh
 ├── /etc/nginx/sites-available/
-│   └── frappe.local
+│              └── frappe.local
 ├── /etc/systemd/
-│   ├── frappe-stack.target
-│   ├── frappe-user.service
-│   └── zpool-check.service
+│        ├── frappe-stack.target
+│        ├── frappe-user.service
+│        └── zpool-check.service
 └── /home/<user>/.config/container/systemd/
-    └── * (For rootless user, paste files from quadlet/ here)
+                                   └── * (For rootless user, paste files from quadlet/ here)
 ```
