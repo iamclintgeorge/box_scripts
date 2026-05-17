@@ -1,3 +1,17 @@
+<div align="center">
+  <a href="https://frappe.io">
+    <img src=".github/logo.svg" height="80" width="80" alt="Frappe Box Logo">
+  </a>
+  <h2>Frappe Box</h2>
+
+**Scripts for Frappe Box**
+
+</div>
+
+> [!Warning]  
+> Frappe Box is in beta. It is strongly advised to use with caution.
+
+
 ## File structure
 ├── /usr/local/bin/
 │              ├── configurator-init.sh
